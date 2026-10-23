@@ -112,10 +112,10 @@ area.
 **3. Choose the range.** **In [I]** and **Out [O]** (keys I and O) set the
 first and last frame to use: the frames in which the subject is visible
 and not covered. The I and O flags can also be dragged, and the IN / OUT
-fields accept a time (`1:23.456`) or a frame (`f2000`). If the range is still
-the whole video when the area is drawn, it is set to 30 frames before and
-after the reference. After changing the range, **Fuse frames →** (or F5)
-runs the fusion again. At most 300 frames per fusion.
+fields accept a time (`1:23.456`) or a frame (`f2000`). Every time the area is
+drawn, the range is set to 150 frames before and 150 after the reference
+(within the video). After changing the range, **Fuse frames →** (or F5)
+runs the fusion again. At most 301 frames per fusion.
 
 ## 5. Fusion page
 

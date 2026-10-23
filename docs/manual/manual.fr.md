@@ -115,10 +115,10 @@ fusion redémarre. **Effacer** supprime la zone.
 fixent la première et la dernière image à utiliser : celles où le sujet est
 visible et non masqué. Les drapeaux I et O peuvent aussi être déplacés à la
 souris, et les champs IN / OUT acceptent un temps (`1:23.456`) ou une image
-(`f2000`). Si la plage couvre encore toute la vidéo au moment où la zone est
-dessinée, elle est fixée à 30 images avant et après la référence. Après avoir
+(`f2000`). Chaque fois que la zone est dessinée, la plage est fixée à
+150 images avant et 150 après la référence (dans les limites de la vidéo). Après avoir
 modifié la plage, **Fusionner les images →** (ou F5) relance la fusion.
-300 images au maximum par fusion.
+301 images au maximum par fusion.
 
 ## 5. Page Fusion
 

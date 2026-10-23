@@ -86,7 +86,7 @@ SHARP_POWER = 4                        # peso per nitidezza = (nitidezza / massi
 # modello di moto di ripiego quando ECC non converge con quello scelto
 FALLBACK = {"homography": "affine", "affine": "euclidean", "euclidean": "translation", "translation": None}
 
-MAX_FRAMES = 300                    # fotogrammi analizzati al massimo
+MAX_FRAMES = 301                    # fotogrammi analizzati al massimo: il riferimento e 150 per parte
 TRACK_BUDGET = 512 * 1024 ** 2      # memoria per le immagini di ricerca (passata 1)
 PATCH_BUDGET = 1024 * 1024 ** 2     # memoria per i ritagli a piena risoluzione (passata 2)
 STACK_BUDGET = 384 * 1024 ** 2      # memoria per la pila di fotogrammi della fusione, a strisce

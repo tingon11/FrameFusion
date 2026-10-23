@@ -114,11 +114,11 @@ fuzji uruchamia ją od nowa. Przycisk **Wyczyść** usuwa obszar.
 **3. Wybór zakresu.** Przyciski **Początek [I]** i **Koniec [O]** (klawisze I
 i O) ustawiają pierwszą i ostatnią klatkę do użycia: te, na których obiekt
 jest widoczny i niezasłonięty. Znaczniki I i O można też przeciągać, a pola
-IN / OUT przyjmują czas (`1:23.456`) lub numer klatki (`f2000`). Jeśli
-w chwili narysowania obszaru zakres nadal obejmuje całe wideo, zostaje on
-ustawiony na 30 klatek przed klatką odniesienia i 30 po niej. Po zmianie
+IN / OUT przyjmują czas (`1:23.456`) lub numer klatki (`f2000`). Przy
+każdym narysowaniu obszaru zakres zostaje ustawiony na 150 klatek przed
+klatką odniesienia i 150 po niej (w granicach wideo). Po zmianie
 zakresu przycisk **Scal klatki →** (lub F5) ponownie uruchamia fuzję.
-Najwyżej 300 klatek na jedną fuzję.
+Najwyżej 301 klatek na jedną fuzję.
 
 ## 5. Strona Fuzja
 

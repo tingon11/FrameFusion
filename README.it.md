@@ -81,10 +81,10 @@ L'interfaccia ha tre pagine, nella barra laterale (Ctrl+1 / 2 / 3).
      diventa il **riferimento** (segnaposto **R** sulla timeline) e la fusione
      **parte da sola**; disegnare un'area nuova mentre gira la fa ripartire;
    - scegli l'intervallo con **Inizio [I]** / **Fine [O]** (o trascinando le
-     bandierine I e O): i fotogrammi in cui il soggetto è visibile. Se
-     l'intervallo è ancora tutto il video, disegnare l'area lo imposta a 30
-     fotogrammi prima e dopo il riferimento. **Fondi fotogrammi →** (o F5)
-     rifà la pipeline dopo aver cambiato l'intervallo.
+     bandierine I e O): i fotogrammi in cui il soggetto è visibile. Ogni
+     volta che disegni l'area, l'intervallo viene impostato a 150 fotogrammi
+     prima e 150 dopo il riferimento (dentro il video). **Fondi fotogrammi →**
+     (o F5) rifà la pipeline dopo aver cambiato l'intervallo.
 3. **Fusione** — parametri a sinistra, confronto a destra: a sinistra il
    **ghost** dei fotogrammi usati (tutti sovrapposti, ciascuno nella posizione
    in cui è stato trovato) oppure il fotogramma di riferimento ingrandito con
@@ -161,7 +161,7 @@ l'elaborazione.
   singolo fotogramma non viene tolto dalla fusione.
 - Una compressione forte (blocchi, impastamento) produce errori uguali in
   fotogrammi consecutivi: la fusione li riduce meno del rumore casuale.
-- Al massimo 300 fotogrammi per fusione; le aree molto grandi si elaborano
+- Al massimo 301 fotogrammi per fusione; le aree molto grandi si elaborano
   su un numero ridotto di fotogrammi (scritto nel rapporto).
 
 ## Eseguibile unico

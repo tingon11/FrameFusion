@@ -8,7 +8,7 @@ ripreso in piu' fotogrammi viene allineato con precisione sub-pixel e fuso,
 con passaggi e parametri documentati in un rapporto. Nato da VideoSlicer.
 """
 
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 APP_NAME = "FrameFusion"
 AUTHOR = "Andrea Cumini"
 AUTHOR_EMAIL = "andrea@osintinfo.net"

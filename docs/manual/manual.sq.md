@@ -114,10 +114,10 @@ rinis. **Pastro** e heq zonën.
 O) vendosin kuadrin e parë dhe të fundit që do të përdoren: kuadrot në të
 cilat subjekti është i dukshëm dhe i pambuluar. Shenjat I dhe O mund të
 zvarriten gjithashtu, dhe fushat IN / OUT pranojnë një kohë (`1:23.456`) ose
-një kuadër (`f2000`). Nëse, kur vizatohet zona, intervali është ende e gjithë
-videoja, ai vendoset në 30 kuadro para dhe pas referencës. Pas ndryshimit të
+një kuadër (`f2000`). Sa herë që vizatohet zona, intervali vendoset në 150 kuadro
+para dhe 150 pas referencës (brenda videos). Pas ndryshimit të
 intervalit, **Shkrij kuadrot →** (ose F5) e nis përsëri shkrirjen. Më së
-shumti 300 kuadro për shkrirje.
+shumti 301 kuadro për shkrirje.
 
 ## 5. Faqja Shkrirja
 

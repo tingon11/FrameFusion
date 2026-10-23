@@ -118,10 +118,10 @@ mientras la fusión está en curso, esta se reinicia. **Borrar** elimina el
 establecen el primer y el último fotograma que se usarán: los fotogramas en
 los que el sujeto es visible y no está tapado. Las marcas I y O también se
 pueden arrastrar, y los campos IN / OUT aceptan un tiempo (`1:23.456`) o un
-fotograma (`f2000`). Si, al dibujar el área, el intervalo sigue siendo todo el
-vídeo, se establece en 30 fotogramas antes y 30 después de la referencia.
+fotograma (`f2000`). Cada vez que se dibuja el área, el intervalo se establece en
+150 fotogramas antes y 150 después de la referencia (dentro del vídeo).
 Después de cambiar el intervalo, **Fusionar fotogramas →** (o F5) vuelve a
-ejecutar la fusión. Como máximo, 300 fotogramas por fusión.
+ejecutar la fusión. Como máximo, 301 fotogramas por fusión.
 
 ## 5. Página Fusión
 

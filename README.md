@@ -81,10 +81,10 @@ The interface has three pages, in the side bar (Ctrl+1 / 2 / 3).
      **reference** (marker **R** on the timeline) and the fusion **starts by
      itself**; drawing a new area while it runs restarts it;
    - choose the range with **In [I]** / **Out [O]** (or by dragging the I and
-     O flags): the frames in which the subject is visible. If the range is
-     still the whole video, drawing the area sets it to 30 frames before and
-     after the reference. **Fuse frames →** (or F5) runs the pipeline again
-     after changing the range.
+     O flags): the frames in which the subject is visible. Every time the
+     area is drawn, the range is set to 150 frames before and 150 after the
+     reference (within the video). **Fuse frames →** (or F5) runs the
+     pipeline again after changing the range.
 3. **Fusion** — parameters on the left, comparison on the right: on the left
    the **ghost** of the frames used (all of them superimposed, at the position
    where each was found) or the reference frame enlarged with bicubic
@@ -159,7 +159,7 @@ processing.
   single frame is not removed by the fusion.
 - Strong compression (blocks, smearing) produces errors that are the same in
   consecutive frames: the fusion reduces them less than random noise.
-- At most 300 frames per fusion; very large areas are processed on a
+- At most 301 frames per fusion; very large areas are processed on a
   reduced number of frames (written in the report).
 
 ## Single executable

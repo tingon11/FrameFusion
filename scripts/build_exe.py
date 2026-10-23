@@ -119,8 +119,11 @@ Updating from a previous version: replace `{exe}` with the new one. Your
 
 ## First start
 
-- The interface starts in English; switch to Italian with **EN / IT** in the
+- The interface starts in English; switch language (English, Italian, German,
+  French, Spanish, Dutch, Polish, Greek, Albanian) in the *Language* box of the
   Configuration page.
+- User manual with screenshots, in every language:
+  [docs/manual](https://github.com/tingon11/FrameFusion/tree/main/docs/manual).
 - ffmpeg is not included: at first start the program offers to download the
   official Windows build into a `tools` folder next to the executable.
 - The executable is not signed, so Windows SmartScreen may show a warning the

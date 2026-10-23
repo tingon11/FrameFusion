@@ -114,10 +114,10 @@ cursore) e **la fusione parte da sola**: il programma passa alla pagina
 **3. Scegli l'intervallo.** **Inizio [I]** e **Fine [O]** (tasti I e O)
 fissano il primo e l'ultimo fotogramma da usare: quelli in cui il soggetto è
 visibile e non coperto. Le bandierine I e O si possono anche trascinare, e i
-campi IN / OUT accettano un tempo (`1:23.456`) o un fotogramma (`f2000`). Se
-quando disegni l'area l'intervallo è ancora tutto il video, viene impostato a
-30 fotogrammi prima e dopo il riferimento. Dopo aver cambiato l'intervallo,
-**Fondi fotogrammi →** (o F5) rifà la fusione. Al massimo 300 fotogrammi per
+campi IN / OUT accettano un tempo (`1:23.456`) o un fotogramma (`f2000`). Ogni
+volta che disegni l'area, l'intervallo viene impostato a 150 fotogrammi prima e
+150 dopo il riferimento (dentro il video). Dopo aver cambiato l'intervallo,
+**Fondi fotogrammi →** (o F5) rifà la fusione. Al massimo 301 fotogrammi per
 fusione.
 
 ## 5. Pagina Fusione

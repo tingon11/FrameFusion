@@ -3,6 +3,14 @@
 The most recent section is used by `scripts/build_exe.py --release` as the
 release notes: first a one-line introduction, then the list of changes.
 
+## 1.0.1
+
+The range now follows the reference frame: every new selection places it 150 frames before and 150 after.
+
+- **Automatic range**: every time the subject area is drawn, In and Out move to 150 frames before and 150 after the reference frame (within the video), also on a new selection; at most 301 frames per fusion (was 300).
+- **Timeline ruler**: labels no longer overlap when zoomed in close to single frames.
+- Release notes: language list and link to the user manual.
+
 ## 1.0.0
 
 First public release: fuses several frames of a video into one enhanced image of a small detail (plate, face, sign), with a report that documents every step.

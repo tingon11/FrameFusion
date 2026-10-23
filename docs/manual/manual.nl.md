@@ -118,10 +118,10 @@ verwijdert het gebied.
 het eerste en het laatste frame dat wordt gebruikt: de frames waarin het
 onderwerp zichtbaar is en niet bedekt. De markeringen I en O kunnen ook worden
 versleept, en de velden IN / OUT accepteren een tijd (`1:23.456`) of een frame
-(`f2000`). Als het bereik bij het tekenen van het gebied nog de hele video is,
-wordt het ingesteld op 30 frames vóór en na de referentie. Start na een
+(`f2000`). Telkens wanneer het gebied wordt getekend, wordt het bereik
+ingesteld op 150 frames vóór en 150 na de referentie (binnen de video). Start na een
 wijziging van het bereik de fusie opnieuw met **Frames fuseren →** (of F5).
-Hoogstens 300 frames per fusie.
+Hoogstens 301 frames per fusie.
 
 ## 5. Pagina Fusie
 

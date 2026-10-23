@@ -49,7 +49,7 @@ PREVIEW_LOOKAHEAD = 8      # fotogrammi decodificati in un colpo quando si avanz
 PREVIEW_CACHE_BYTES = 192 * 1024 * 1024   # memoria per i fotogrammi gia' decodificati
 LOG_MAX = 400
 COLLAPSE_BELOW = 1220     # larghezza finestra sotto cui la barra laterale si comprime
-AUTO_RANGE = 30           # fotogrammi per parte attorno al riferimento, se l'intervallo e' tutto il video
+AUTO_RANGE = 150          # fotogrammi per parte attorno al riferimento, fissati a ogni area disegnata
 PROGRESS_EVERY = 0.06     # secondi tra due aggiornamenti dell'avanzamento della pipeline
 
 # chiave, etichetta, glifo (Segoe Fluent Icons), titolo della pagina
@@ -1398,10 +1398,12 @@ class App(ctk.CTk):
         self.ref = self.timeline.play_f
         self.timeline.set_reference(self.ref)
         tl = self.timeline
-        # intervallo ancora sull'intero video: si propone un intorno del riferimento
-        if tl.in_f == 0 and tl.out_f == self.info.frames - 1 and self.info.frames > 2 * AUTO_RANGE + 1:
-            tl.set_in(max(0, self.ref - AUTO_RANGE), notify=False)
-            tl.set_out(min(self.info.frames - 1, self.ref + AUTO_RANGE), notify=False)
+        # l'intervallo si centra sul riferimento: AUTO_RANGE fotogrammi prima e dopo, dentro il video
+        first = max(0, self.ref - AUTO_RANGE)
+        last = min(self.info.frames - 1, self.ref + AUTO_RANGE)
+        if (tl.in_f, tl.out_f) != (first, last):
+            tl.set_out(last, notify=False)
+            tl.set_in(first, notify=False)
             self._on_range(tl.in_f, tl.out_f)
             self.log(tr("Range set around the reference: f{first} → f{last}. Move I / O to change it.").format(
                 first=tl.in_f, last=tl.out_f))

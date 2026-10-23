@@ -120,10 +120,10 @@ den Ausschnitt.
 ersten und den letzten zu verwendenden Frame: die Frames, in denen das Motiv
 sichtbar und nicht verdeckt ist. Die Marken I und O lassen sich auch ziehen,
 und die Felder IN / OUT akzeptieren eine Zeit (`1:23.456`) oder einen Frame
-(`f2000`). Umfasst der Bereich beim Zeichnen des Ausschnitts noch das ganze
-Video, wird er auf 30 Frames vor und nach der Referenz gesetzt. Nach einer
+(`f2000`). Bei jedem Zeichnen des Ausschnitts wird der Bereich auf 150 Frames
+vor und 150 nach der Referenz gesetzt (innerhalb des Videos). Nach einer
 Änderung des Bereichs startet **Frames fusionieren →** (oder F5) die Fusion
-erneut. Höchstens 300 Frames pro Fusion.
+erneut. Höchstens 301 Frames pro Fusion.
 
 ## 5. Seite „Fusion“
 
