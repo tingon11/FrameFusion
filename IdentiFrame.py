@@ -1,0 +1,50 @@
+# IdentiFrame — fusione multi-frame di fotogrammi video.  Copyright (C) 2026 Andrea Cumini <andrea@osintinfo.net>
+# SPDX-License-Identifier: GPL-3.0-only
+# GNU GPL v3 con termini aggiuntivi (attribuzione dell'autore): vedi LICENSE e NOTICE.
+"""IdentiFrame - punto di ingresso.
+
+Migliora la leggibilita' di un dettaglio (targa, volto, scritta) ripreso in
+piu' fotogrammi di un video: li allinea con precisione sub-pixel, li fonde su
+una griglia piu' fine, riduce rumore e sfocatura e produce un'unica immagine
+con un rapporto che documenta parametri e passaggi.
+
+    python IdentiFrame.py [video]
+"""
+
+from __future__ import annotations
+
+import sys
+
+
+def _fail(message: str) -> int:
+    """Segnala un avvio impossibile anche senza console (Avvia.bat usa pythonw)."""
+    if sys.stderr is not None:
+        print(message, file=sys.stderr)
+    if sys.platform == "win32":
+        import ctypes
+
+        ctypes.windll.user32.MessageBoxW(None, message, "IdentiFrame", 0x10)
+    return 1
+
+
+def main() -> int:
+    from identiframe import i18n
+    from identiframe.config import Config
+
+    i18n.set_language(Config().get("language"))
+    try:
+        from identiframe.app import run
+    except ImportError as exc:  # pragma: no cover - ambiente incompleto
+        return _fail(
+            i18n.tr(
+                "Cannot start the interface: {error}\n\n"
+                "Install the dependencies with:\n"
+                "    python -m pip install -r requirements.txt"
+            ).format(error=exc)
+        )
+    run(sys.argv[1] if len(sys.argv) > 1 else None)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

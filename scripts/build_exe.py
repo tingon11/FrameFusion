@@ -1,31 +1,36 @@
-# FrameFusion — fusione multi-frame di fotogrammi video.  Copyright (C) 2026 Andrea Cumini <andrea@osintinfo.net>
+# IdentiFrame — fusione multi-frame di fotogrammi video.  Copyright (C) 2026 Andrea Cumini <andrea@osintinfo.net>
 # SPDX-License-Identifier: GPL-3.0-only
 # GNU GPL v3 con termini aggiuntivi (attribuzione dell'autore): vedi LICENSE e NOTICE.
-"""Compila FrameFusion in un unico eseguibile Windows e, a richiesta, prepara e pubblica la release.
+"""Compila IdentiFrame in un unico eseguibile Windows e, a richiesta, prepara e pubblica la release.
 
-    .venv\\Scripts\\python.exe scripts\\build_exe.py              solo dist/FrameFusion.exe
+    .venv\\Scripts\\python.exe scripts\\build_exe.py              solo dist/IdentiFrame.exe
     .venv\\Scripts\\python.exe scripts\\build_exe.py --release    + zip e note di rilascio in dist/
     .venv\\Scripts\\python.exe scripts\\build_exe.py --publish    + release su GitHub con lo zip allegato
 
-L'eseguibile e' un solo file, senza finestra console, con l'icona «FF» e le
+L'eseguibile e' un solo file, senza finestra console, con l'icona «IF» e le
 proprieta' del file (versione, autore) compilate. Dentro ci sono Python, le
-librerie (NumPy, OpenCV), il logo e l'icona; ffmpeg no: l'eseguibile lo cerca nella cartella
-tools/ accanto a se' e, se manca, propone di scaricarlo. Il pacchetto
-imageio-ffmpeg, se e' installato nel virtualenv, viene escluso di proposito.
+librerie (NumPy, OpenCV, fpdf2), il logo e l'icona; FFmpeg no, in nessuna forma:
+ffmpeg.exe lo cerca nella cartella tools/ accanto a se' e, se manca, propone di
+scaricarlo; la libreria FFmpeg che il wheel di OpenCV porta con se'
+(opencv_videoio_ffmpeg*.dll, LGPL) viene tolta dal bundle, perche' il programma
+legge il video con ffmpeg.exe e non la usa. Per questo il build passa da un file
+spec generato qui (build/<nome>.spec): la riga di comando di PyInstaller non
+permette di escludere un binario. Il pacchetto imageio-ffmpeg, se e' installato
+nel virtualenv, viene escluso di proposito.
 
---release produce dist/FrameFusion-<versione>-windows-x64.zip (exe, LICENSE,
+--release produce dist/IdentiFrame-<versione>-windows-x64.zip (exe, LICENSE,
 NOTICE, README e la cartella licenses/ con i file di licenza di Python e delle
 librerie dentro l'eseguibile, presi dal virtualenv: PyInstaller non li include)
 e dist/release-notes-<versione>.md, con le novita' prese dalla sezione piu'
 recente di CHANGELOG.md, l'elenco delle librerie e l'impronta SHA-256 dello zip.
 
---publish (che include --release) crea su GitHub la release «v<versione>» con
+--publish (che include --release) crea su GitHub la release «<versione>» con
 quelle note e vi allega lo zip. Il repository e' quello del remote «origin»;
 serve un token con permesso di scrittura sui contenuti, letto dalla variabile
 d'ambiente GITHUB_TOKEN oppure chiesto al momento (non viene salvato). La tag
 viene creata da GitHub sul commit corrente del ramo, che quindi deve essere
 gia' stato inviato con git push. Se una release con la stessa tag esiste gia',
-lo script si ferma: alza la versione in framefusion/__init__.py.
+lo script si ferma: alza la versione in identiframe/__init__.py.
 """
 
 from __future__ import annotations
@@ -50,17 +55,20 @@ from typing import NamedTuple
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from framefusion import APP_NAME, AUTHOR, AUTHOR_EMAIL, AUTHOR_URL, COPYRIGHT, __version__  # noqa: E402
+from identiframe import APP_NAME, AUTHOR, AUTHOR_EMAIL, AUTHOR_URL, COPYRIGHT, __version__  # noqa: E402
 
-ASSETS = ROOT / "framefusion" / "assets"
-ICON = ASSETS / "framefusion.ico"
+PACKAGE = "identiframe"
+ASSETS = ROOT / PACKAGE / "assets"
+ICON = ASSETS / "identiframe.ico"
+# la libreria FFmpeg del wheel di OpenCV: tolta dal bundle (vedi SPEC e check_no_ffmpeg_dll)
+FFMPEG_DLL_PREFIX = "opencv_videoio_ffmpeg"
 BUILD = ROOT / "build"
 DIST = ROOT / "dist"
 CHANGELOG = ROOT / "CHANGELOG.md"
 EXE = DIST / f"{APP_NAME}.exe"
 ZIP = DIST / f"{APP_NAME}-{__version__}-windows-x64.zip"
 NOTES = DIST / f"release-notes-{__version__}.md"
-TAG = f"v{__version__}"
+TAG = __version__   # come le release precedenti su GitHub (1.0.0, 1.0.1): senza «v»
 ZIP_FILES = ("LICENSE", "NOTICE", "README.md", "README.it.md")
 # Librerie che PyInstaller mette nell'eseguibile senza i loro file di licenza:
 # nome della distribuzione e licenza (quella scritta nel file di licenza del
@@ -69,8 +77,8 @@ BUNDLED = (
     ("customtkinter", "MIT"),
     ("pillow", "MIT-CMU"),
     ("numpy", "BSD-3-Clause (bundled components under 0BSD, MIT, Zlib and CC0-1.0)"),
-    ("opencv-python-headless", "Apache-2.0; the FFmpeg library it ships (opencv_videoio_ffmpeg*.dll) "
-                               "is under the LGPL-2.1: see LICENSE-3RD-PARTY.txt"),
+    ("opencv-python-headless", "Apache-2.0; the image codecs built into it are under their own licenses, see "
+                               "LICENSE-3RD-PARTY.txt (the FFmpeg library of the wheel is not in the executable)"),
     ("darkdetect", "BSD-3-Clause"),
     ("packaging", "Apache-2.0 OR BSD-2-Clause"),
     ("fpdf2", "LGPL-3.0-only"),
@@ -115,7 +123,7 @@ RELEASE_NOTES = """\
 not needed: unzip it anywhere and run `{exe}`.
 
 Updating from a previous version: replace `{exe}` with the new one. Your
-`tools` folder (ffmpeg) and `config.json` stay as they are.
+`tools` folder (ffmpeg, OCR models) and `config.json` stay as they are.
 
 ## First start
 
@@ -123,9 +131,12 @@ Updating from a previous version: replace `{exe}` with the new one. Your
   French, Spanish, Dutch, Polish, Greek, Albanian) in the *Language* box of the
   Configuration page.
 - User manual with screenshots, in every language:
-  [docs/manual](https://github.com/tingon11/FrameFusion/tree/main/docs/manual).
+  [docs/manual](https://github.com/tingon11/IdentiFrame/tree/main/docs/manual).
 - ffmpeg is not included: at first start the program offers to download the
   official Windows build into a `tools` folder next to the executable.
+- The OCR models for reading plates and texts are optional and not included:
+  download them from the *OCR models* box of the Configuration page (see
+  below). Without them the program works, without the character reading.
 - The executable is not signed, so Windows SmartScreen may show a warning the
   first time it runs.
 
@@ -143,6 +154,24 @@ SHA-256 of `{zip}`:
 its own license; their license files are in the `licenses` folder of the zip:
 
 {bundled}
+
+## Downloaded on request (not included)
+
+These programs and models are not part of `{exe}` and are not in the zip: the
+program downloads them only when asked, into the `tools` folder next to it,
+together with their license files.
+
+- **ffmpeg**, the official Windows build from <https://www.gyan.dev/ffmpeg/builds/>
+  (GNU LGPL / GPL), into `tools/ffmpeg`: reads the video.
+- **fast-plate-ocr** `cct-s-v2-global` by ankandrew (MIT, code and weights,
+  <https://github.com/ankandrew/fast-plate-ocr>), into `tools/ocr/plate`:
+  reads plates and their possible country.
+- **PaddleOCR PP-OCRv6 small** (Apache 2.0, weights by Baidu / PaddleOCR, ONNX
+  conversion by RapidOCR, <https://github.com/PaddlePaddle/PaddleOCR>), into
+  `tools/ocr/text`: finds and reads text lines.
+
+Every OCR model file is checked against its SHA-256 fingerprint before it is
+kept.
 
 ## License
 
@@ -164,9 +193,52 @@ after each one.
 
 {entries}
 
-FFmpeg itself (ffmpeg.exe) is not part of {exe}: see NOTICE.
+FFmpeg is not part of {exe}: neither ffmpeg.exe, which the program downloads
+on request into the tools folder, nor the FFmpeg library that the OpenCV
+package ships, which is left out of the build. The OCR models (fast-plate-ocr,
+MIT; PaddleOCR PP-OCRv6, Apache 2.0) are not part of it either: the program
+downloads them on request into tools/ocr, with their license files. See
+NOTICE.
 {name} is free software under the GNU GPL v3 with additional terms: see
 LICENSE and NOTICE next to the executable.
+"""
+
+# File spec di PyInstaller, generato a ogni build: la riga di comando non permette di togliere un binario.
+SPEC = """\
+# -*- mode: python ; coding: utf-8 -*-
+# Generato da scripts/build_exe.py a ogni build: non modificare a mano.
+from pathlib import Path
+
+from PyInstaller.utils.hooks import collect_data_files, collect_submodules
+
+a = Analysis(
+    [{entry!r}],
+    pathex=[{root!r}],
+    binaries=[],
+    # logo e icona: il programma li cerca accanto a theme.py; temi e caratteri di customtkinter sono dati
+    datas=[({assets!r}, {assets_dest!r})] + collect_data_files("customtkinter"),
+    # i cataloghi delle lingue ({locales}/*.py) sono importati per nome
+    hiddenimports=["PIL._tkinter_finder"] + collect_submodules({locales!r}),
+    hookspath=[],
+    hooksconfig={{}},
+    runtime_hooks=[],
+    # ffmpeg resta fuori: sta in tools/ accanto all'exe, non nel bundle
+    excludes=["imageio_ffmpeg", "imageio"],
+    noarchive=False,
+)
+# La libreria FFmpeg del wheel di OpenCV (LGPL) non serve: il video lo legge ffmpeg.exe e cv2 la
+# carica solo per VideoCapture, che il programma non usa. Fuori dal bundle: l'exe non ridistribuisce FFmpeg.
+a.binaries = [item for item in a.binaries if not Path(item[0]).name.lower().startswith({dll_prefix!r})]
+pyz = PYZ(a.pure)
+exe = EXE(
+    pyz, a.scripts, a.binaries, a.datas, [],
+    name={name!r},
+    debug=False, bootloader_ignore_signals=False, strip=False, upx=True, upx_exclude=[],
+    runtime_tmpdir=None, console=False, disable_windowed_traceback=False,
+    argv_emulation=False, target_arch=None, codesign_identity=None, entitlements_file=None,
+    version={version_file!r},
+    icon=[{icon!r}],
+)
 """
 
 
@@ -199,34 +271,47 @@ def version_file() -> Path:
     return target
 
 
+def spec_file() -> Path:
+    """Scrive build/<nome>.spec dal modello SPEC, con i percorsi di questo progetto."""
+    target = BUILD / f"{APP_NAME}.spec"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        SPEC.format(
+            entry=(ROOT / f"{APP_NAME}.py").as_posix(), root=ROOT.as_posix(),
+            assets=ASSETS.as_posix(), assets_dest=f"{PACKAGE}/assets", locales=f"{PACKAGE}.locales",
+            dll_prefix=FFMPEG_DLL_PREFIX, name=APP_NAME, version_file=version_file().as_posix(),
+            icon=ICON.as_posix(),
+        ),
+        encoding="utf-8",
+    )
+    return target
+
+
+def check_no_ffmpeg_dll() -> None:
+    """Verifica sull'elenco dei file impacchettati (PKG-00.toc) che la DLL FFmpeg di OpenCV sia rimasta fuori."""
+    toc = BUILD / APP_NAME / "PKG-00.toc"
+    if not toc.is_file():
+        print(f"Attenzione: {toc.relative_to(ROOT)} assente, contenuto del bundle non verificato.")
+        return
+    if FFMPEG_DLL_PREFIX in toc.read_text(encoding="utf-8", errors="replace").lower():
+        sys.exit(f"La libreria FFmpeg di OpenCV ({FFMPEG_DLL_PREFIX}*.dll) e' finita nel bundle: controlla lo spec.")
+    print("Bundle senza la libreria FFmpeg di OpenCV: verificato.")
+
+
 def build() -> None:
     ensure_icon()
     ensure_pyinstaller()
     argv = [
         sys.executable, "-m", "PyInstaller",
         "--noconfirm", "--clean",
-        "--onefile", "--windowed",
-        "--name", APP_NAME,
-        "--icon", str(ICON),
-        "--version-file", str(version_file()),
-        # logo e icona: il programma li cerca accanto a theme.py
-        "--add-data", f"{ASSETS}{os.pathsep}framefusion/assets",
-        # temi e caratteri di customtkinter sono file di dati, non moduli
-        "--collect-data", "customtkinter",
-        # i cataloghi delle lingue (framefusion/locales/*.py) sono importati per nome
-        "--collect-submodules", "framefusion.locales",
-        "--hidden-import", "PIL._tkinter_finder",
-        # ffmpeg resta fuori: sta in tools/ accanto all'exe, non nel bundle
-        "--exclude-module", "imageio_ffmpeg",
-        "--exclude-module", "imageio",
         "--distpath", str(DIST),
         "--workpath", str(BUILD),
-        "--specpath", str(BUILD),
-        str(ROOT / "FrameFusion.py"),
+        str(spec_file()),
     ]
     code = subprocess.call(argv, cwd=ROOT)
     if code != 0:
         sys.exit(code)
+    check_no_ffmpeg_dll()
     print(f"\n{EXE}  ({EXE.stat().st_size / 1024 / 1024:.1f} MB)")
 
 
@@ -403,7 +488,7 @@ def publish() -> None:
         "User-Agent": f"{APP_NAME}-build/{__version__}"})
     try:
         with urllib.request.urlopen(request, timeout=30):
-            sys.exit(f"La release {TAG} esiste gia' su GitHub: alza __version__ in framefusion/__init__.py.")
+            sys.exit(f"La release {TAG} esiste gia' su GitHub: alza __version__ in identiframe/__init__.py.")
     except urllib.error.HTTPError as exc:
         if exc.code != 404:
             sys.exit(f"GitHub ha risposto {exc.code} controllando la release {TAG}.")

@@ -1,10 +1,10 @@
-# FrameFusion — fusione multi-frame di fotogrammi video.  Copyright (C) 2026 Andrea Cumini <andrea@osintinfo.net>
+# IdentiFrame — fusione multi-frame di fotogrammi video.  Copyright (C) 2026 Andrea Cumini <andrea@osintinfo.net>
 # SPDX-License-Identifier: GPL-3.0-only
 # GNU GPL v3 con termini aggiuntivi (attribuzione dell'autore): vedi LICENSE e NOTICE.
 """Controlla che ogni testo dell'interfaccia abbia la traduzione in ogni lingua.
 
 Legge i sorgenti senza eseguirli: raccoglie i testi passati a tr() e N_() e li
-confronta con il catalogo di ogni lingua in framefusion/locales/. Segnala le
+confronta con il catalogo di ogni lingua in identiframe/locales/. Segnala le
 traduzioni mancanti, quelle che nessun testo usa piu', le chiavi ripetute e i
 segnaposto {nome} che non coincidono tra inglese e traduzione. Da lanciare
 dopo aver aggiunto o cambiato un testo o una traduzione:
@@ -24,17 +24,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from framefusion.locales import DEFAULT, LANGUAGES  # noqa: E402
+from identiframe.locales import DEFAULT, LANGUAGES  # noqa: E402
 
 MARKERS = {"tr", "N_"}
-LOCALES = ROOT / "framefusion" / "locales"
+LOCALES = ROOT / "identiframe" / "locales"
 
 
 def used_texts() -> dict[str, str]:
     """Testi marcati nei sorgenti, ognuno con il primo punto in cui compare."""
     found: dict[str, str] = {}
-    sources = [ROOT / "FrameFusion.py"] + sorted(
-        p for p in (ROOT / "framefusion").rglob("*.py") if LOCALES not in p.parents)
+    sources = [ROOT / "IdentiFrame.py"] + sorted(
+        p for p in (ROOT / "identiframe").rglob("*.py") if LOCALES not in p.parents)
     for path in sources:
         tree = ast.parse(path.read_text(encoding="utf-8"), str(path))
         for node in ast.walk(tree):
@@ -76,7 +76,7 @@ def check(code: str, used: dict[str, str]) -> list[str]:
     path = LOCALES / f"{code}.py"
     if not path.is_file():
         return [f"manca il modulo {path.relative_to(ROOT)}"]
-    module = import_module(f"framefusion.locales.{code}")
+    module = import_module(f"identiframe.locales.{code}")
     catalog = module.CATALOG
     problems: list[str] = []
     for text, where in used.items():
@@ -103,7 +103,7 @@ def main() -> int:
     total = 0
     for code in codes:
         if code not in LANGUAGES:
-            print(f"{code}: lingua sconosciuta (vedi framefusion/locales/__init__.py)")
+            print(f"{code}: lingua sconosciuta (vedi identiframe/locales/__init__.py)")
             total += 1
             continue
         problems = check(code, used)

@@ -1,4 +1,4 @@
-FrameFusion
+IdentiFrame
 Copyright (C) 2026 Andrea Cumini <andrea@osintinfo.net>
 https://www.osintinfo.net
 
@@ -48,8 +48,8 @@ ADDITIONAL TERMS (GNU GPL version 3, section 7)
 
 3. Name and logo (section 7(e))
 
-   The name "FrameFusion", its logo and its "FF" icon (logo.png,
-   framefusion.ico and the same artwork inside the program's window and
+   The name "IdentiFrame", its logo and its "IF" icon (logo.png,
+   identiframe.ico and the same artwork inside the program's window and
    executable) identify the original program and its author. The License
    does not grant any right to use them as a trade name, trademark or
    service mark: a modified version distributed to others must use a
@@ -59,21 +59,43 @@ ADDITIONAL TERMS (GNU GPL version 3, section 7)
 CREDITS
 =======
 
-FrameFusion derives from VideoSlicer, by the same author: the preview, the
-timeline and the FFmpeg handling come from it. The interface theme, the
-window shell and the logo style come from AndrOsint and TagFaces, also by the
-same author.
+IdentiFrame is the continuation, under a new name, of FrameFusion by the same
+author: the multi-frame pipeline, the reports and the interface come from it.
+
+
+FONT
+====
 
 The logo and the icon are set in Panchang, a typeface by Indian Type Foundry
-(ITF), which owns its trademarks and copyright
-<https://www.fontshare.com/fonts/panchang>. They contain outlines and
-images only: the font is not distributed with this program.
+(ITF), distributed by Fontshare <https://www.fontshare.com/fonts/panchang>
+under the ITF Free Font License; ITF owns its trademarks and copyright. The
+logo and icon files contain outlines and pixels only: the font itself is not
+distributed with this program.
+
+
+TEST VIDEOS
+===========
+
+The program was tested, and the screenshots of the user manual were made,
+with three videos from Pexels, used under the Pexels license
+<https://www.pexels.com/license/>:
+
+- vehicles and plates: "Traffico Autostradale Intenso Al Tramonto" (Busy
+  Highway Traffic at Sunset) by Şeyhmus Kino
+  <https://www.pexels.com/it-it/video/traffico-autostradale-intenso-al-tramonto-31779728/>
+- texts: "Traffico Sulla Strada nella Città di Taipei, Taiwan" by Levi Wedge
+  <https://www.pexels.com/it-it/video/citta-auto-traffico-veicoli-13271103/>
+- face: "Affascinante Strada Europea Con Ciclista" (Charming European Street
+  with Cyclist) by Tuba Din
+  <https://www.pexels.com/it-it/video/affascinante-strada-europea-con-ciclista-33476096/>
+
+The videos are not distributed with this program.
 
 
 THIRD-PARTY SOFTWARE
 ====================
 
-FrameFusion does not include FFmpeg. When the user asks for it, the program
+IdentiFrame does not include FFmpeg. When the user asks for it, the program
 downloads the official Windows build ("release essentials", by Gyan Doshi,
 <https://www.gyan.dev/ffmpeg/builds/>, the build linked from
 <https://ffmpeg.org/download.html>) into the tools/ffmpeg/ folder next to
@@ -85,16 +107,58 @@ license and source code are available at <https://ffmpeg.org/legal.html>.
 An ffmpeg already present in the PATH, or the one shipped by the optional
 Python package imageio-ffmpeg (BSD-2-Clause), is used in the same way.
 
-FrameFusion uses the Python libraries CustomTkinter (MIT, with its
+The Python package opencv-python-headless ships its own copy of the FFmpeg
+libraries (opencv_videoio_ffmpeg*.dll, GNU LGPL v2.1) for OpenCV's video
+reading, which IdentiFrame does not use: that file is left out of the
+executable built with PyInstaller, so the executable redistributes no part
+of FFmpeg.
+
+IdentiFrame uses the Python libraries CustomTkinter (MIT, with its
 dependencies darkdetect, BSD-3-Clause, and packaging, Apache 2.0 or
-BSD-2-Clause), Pillow (MIT-CMU), NumPy (BSD-3-Clause) and OpenCV
-(opencv-python-headless, Apache License 2.0; that package ships an FFmpeg
-library, opencv_videoio_ffmpeg*.dll, under the GNU LGPL v2.1, as documented
-in its LICENSE-3RD-PARTY.txt), and fpdf2 (GNU LGPL v3, with its dependencies
-fonttools, MIT, and defusedxml, PSF License), which writes the PDF report.
-Each of them remains under its own license, as does the Python interpreter
-(PSF License). The PDF report embeds subsets of fonts installed on the
-user's computer (Segoe UI and Consolas on Windows, DejaVu or Liberation
-elsewhere), as their licenses allow; no font is distributed with the program. The executable built with
-PyInstaller contains them; the release archive includes their license files
-in the licenses folder.
+BSD-2-Clause), Pillow (MIT-CMU), NumPy (BSD-3-Clause), OpenCV
+(opencv-python-headless, Apache License 2.0; the image codecs built into it
+are under their own licenses, listed in its LICENSE-3RD-PARTY.txt) and fpdf2
+(GNU LGPL v3, with its dependencies fonttools, MIT, and defusedxml, PSF
+License), which writes the PDF report. Each of them remains under its own
+license, as does the Python interpreter (PSF License). The executable built
+with PyInstaller contains them unmodified; the release archive includes
+their license files in the licenses folder. fpdf2 is used as published: its
+source code is available at <https://pypi.org/project/fpdf2/> and
+<https://github.com/py-pdf/fpdf2>, and since IdentiFrame is itself free
+software anyone can rebuild the executable with a modified copy of it, as
+section 4 of the GNU LGPL v3 requires. The PDF report embeds subsets of
+fonts installed on the user's computer (Segoe UI and Consolas on Windows,
+DejaVu or Liberation elsewhere; for texts read in other scripts, the system
+fonts that contain them, such as Microsoft YaHei), as their licenses allow;
+no font is distributed with the program.
+
+
+OCR MODELS (DOWNLOADED ON REQUEST)
+==================================
+
+The character reading uses two neural network models that are not part of
+this program and are not included in the executable or in the release
+archive. They are optional: without them IdentiFrame works normally and
+only the character reading is missing. When the user asks for them, the
+program downloads them into the tools/ocr/ folder next to it, checks every
+file against the SHA-256 fingerprint written in identiframe/tools.py, and
+saves next to them their license texts and a SOURCE.txt file with their
+origin. They are run by the DNN module of OpenCV; the files on disk are used
+as published (when loading, a Clip node is added in memory in front of each
+Tanh node, which does not change the results).
+
+- tools/ocr/plate/: fast-plate-ocr, model cct-s-v2-global and its
+  configuration, by ankandrew <https://github.com/ankandrew/fast-plate-ocr>,
+  from the release "arg-plates" of that repository. Code and pretrained
+  weights are under the MIT License; the author confirms that the license
+  covers the published .keras and .onnx models, commercial use included, in
+  <https://github.com/ankandrew/fast-plate-ocr/issues/97>.
+
+- tools/ocr/text/: PaddleOCR PP-OCRv6 small, text detection and
+  recognition models and their character list
+  <https://github.com/PaddlePaddle/PaddleOCR>, Apache License 2.0; copyright
+  in the model weights is held by Baidu and/or the PaddleOCR rights holders.
+  The files are the ONNX conversion published by RapidOCR 3.10.0
+  <https://github.com/RapidAI/RapidOCR> (Apache License 2.0), downloaded from
+  <https://www.modelscope.cn/models/RapidAI/RapidOCR>; its MODEL_LICENSES.md
+  is saved with them.

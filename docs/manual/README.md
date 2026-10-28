@@ -1,4 +1,4 @@
-# FrameFusion — Manual
+# IdentiFrame — Manual
 
 | Language | Manual |
 | --- | --- |
@@ -13,6 +13,7 @@
 | Shqip | [manual.sq.md](manual.sq.md) |
 
 The screenshots in `images/<language>/` show the interface and the PDF report
-in that language. They were made with the video “[Busy Highway Traffic at Sunset](https://www.pexels.com/video/busy-highway-traffic-at-sunset-31779728/)” by [Şeyhmus Kino](https://www.pexels.com/@seyhmuskino/), from Pexels, used under the [Pexels license](https://www.pexels.com/license/). The translations other than English and Italian were made
+in that language, taken with IdentiFrame 1.1.1. The three test videos come from
+Pexels and are used under the [Pexels license](https://www.pexels.com/license/): “[Busy Highway Traffic at Sunset](https://www.pexels.com/it-it/video/traffico-autostradale-intenso-al-tramonto-31779728/)” by [Şeyhmus Kino](https://www.pexels.com/@seyhmuskino/) (vehicles and plates), “[Traffico Sulla Strada nella Città di Taipei, Taiwan](https://www.pexels.com/it-it/video/citta-auto-traffico-veicoli-13271103/)” by [Levi Wedge](https://www.pexels.com/@levi-wedge-266970209/) (texts) and “[Charming European Street with Cyclist](https://www.pexels.com/it-it/video/affascinante-strada-europea-con-ciclista-33476096/)” by [Tuba Din](https://www.pexels.com/@tubadinn/) (face). The translations other than English and Italian were made
 with the help of a language model and have not been reviewed by native
 speakers yet: corrections are welcome.

@@ -1,8 +1,8 @@
-# FrameFusion — Podręcznik użytkownika
+# IdentiFrame — Podręcznik użytkownika
 
 [English](manual.en.md) · [Italiano](manual.it.md) · [Deutsch](manual.de.md) · [Français](manual.fr.md) · [Español](manual.es.md) · [Nederlands](manual.nl.md) · **Polski** · [Ελληνικά](manual.el.md) · [Shqip](manual.sq.md)
 
-FrameFusion poprawia czytelność drobnego szczegółu — tablicy rejestracyjnej,
+IdentiFrame poprawia czytelność drobnego szczegółu — tablicy rejestracyjnej,
 twarzy, napisu — zarejestrowanego na kilku klatkach wideo. Program dopasowuje
 te klatki z dokładnością subpikselową, scala je na gęstszej siatce, redukuje
 szum i rozmycie oraz tworzy **jeden pojedynczy obraz** wraz z raportem, który
@@ -21,11 +21,12 @@ dokumentuje każdy parametr i każdy etap.
 7. [Jak uzyskać najlepszy wynik dla tablicy lub twarzy](#7-jak-uzyskać-najlepszy-wynik-dla-tablicy-lub-twarzy)
 8. [Ograniczenia i prawidłowe użycie](#8-ograniczenia-i-prawidłowe-użycie)
 9. [Skróty klawiaturowe](#9-skróty-klawiaturowe)
+10. [Modele OCR (opcjonalne)](#10-modele-ocr-opcjonalne)
 
 ## 1. Jak to działa
 
 Każda klatka wideo rejestruje obiekt w nieco innym położeniu względem siatki
-pikseli i z własnym, losowym szumem. FrameFusion to wykorzystuje: odnajduje
+pikseli i z własnym, losowym szumem. IdentiFrame to wykorzystuje: odnajduje
 obiekt na każdej klatce, dopasowuje wszystkie klatki z dokładnością
 subpikselową do jednej z nich — jest nią **klatka odniesienia** — i łączy je.
 Szum maleje, a część szczegółów utraconych na każdej pojedynczej klatce
@@ -45,8 +46,8 @@ Praca przebiega w siedmiu etapach, widocznych w panelu *Przetwarzanie*:
 
 ## 2. Instalacja i pierwsze uruchomienie
 
-**Plik wykonywalny (Windows 10/11, 64-bit).** Archiwum `FrameFusion-<wersja>-windows-x64.zip`
-należy rozpakować w dowolnym miejscu i uruchomić `FrameFusion.exe`. Python nie
+**Plik wykonywalny (Windows 10/11, 64-bit).** Archiwum `IdentiFrame-<wersja>-windows-x64.zip`
+należy rozpakować w dowolnym miejscu i uruchomić `IdentiFrame.exe`. Python nie
 jest potrzebny. Plik wykonywalny nie jest podpisany: przy pierwszym
 uruchomieniu Windows SmartScreen może poprosić o potwierdzenie.
 
@@ -54,17 +55,27 @@ uruchomieniu Windows SmartScreen może poprosić o potwierdzenie.
 
 ```bash
 python -m pip install -r requirements.txt
-python FrameFusion.py
+python IdentiFrame.py
 ```
 
-**FFmpeg.** FrameFusion używa FFmpeg do odczytu plików wideo, ale go nie
+**Komunikat przy uruchomieniu.** Przy każdym uruchomieniu pojawia się
+komunikat do zaakceptowania: wyjaśnia, że wynik jest rekonstrukcją obliczoną
+wyłącznie z rzeczywistych pikseli klatek, w której nic nie zostało
+wymyślone, natomiast odczyt znaków i kraj są szacunkami do sprawdzenia.
+*Akceptuj i kontynuuj* staje się aktywne po zaznaczeniu oświadczenia. Przy
+pierwszym uruchomieniu najpierw pojawia się pytanie o język, a komunikat
+wyświetla się w wybranym języku.
+
+![Komunikat przy uruchomieniu](images/pl/00_notice.png)
+
+**FFmpeg.** IdentiFrame używa FFmpeg do odczytu plików wideo, ale go nie
 zawiera. Jeśli przy pierwszym uruchomieniu brakuje FFmpeg, otwiera się strona
 **Konfiguracja** z panelem *FFmpeg*: przycisk **Pobierz / Aktualizuj** pobiera
 oficjalną kompilację dla Windows do folderu `tools\ffmpeg` obok programu. Nic
 nie jest instalowane w systemie.
 
 Wideo można też otworzyć z wiersza poleceń:
-`FrameFusion.exe video.mp4`.
+`IdentiFrame.exe video.mp4`.
 
 ## 3. Strona Konfiguracja
 
@@ -80,6 +91,7 @@ Wideo można też otworzyć z wiersza poleceń:
   użytymi klatkami, dopasowanymi do klatki odniesienia.
 - **FFmpeg** — gdzie znajduje się FFmpeg i w jakiej wersji: **Sprawdź**,
   **Sprawdź aktualizacje**, **Pobierz / Aktualizuj**.
+- **Modele OCR** — dwa opcjonalne modele, które odczytują znaki tablic i napisów, pobierane na żądanie do `tools\ocr` (około 37 MB): **Sprawdź** i **Pobierz / Aktualizuj**. Bez nich program działa, tylko bez odczytu znaków. Zob. [10. Modele OCR](#10-modele-ocr-opcjonalne).
 - **Język** — interfejs i raporty są dostępne w dziewięciu językach: EN, IT,
   DE, FR, ES, NL, PL, EL, SQ. Zmiana jest natychmiastowa i zostaje zapamiętana.
 - **Autorzy** — autor i licencja.
@@ -93,6 +105,12 @@ wskaźnika myszy (aż do rzeczywistych pikseli), **przeciąganie** przesuwa
 widok, a **dwuklik** ponownie dopasowuje klatkę do okna. Przyciski pod
 podglądem przesuwają kursor o jedną lub dziesięć klatek; to samo robią
 klawisze **← →** i **Shift+← →**.
+
+Przycisk **odtwórz** pośrodku odtwarza podgląd od kursora i podczas
+odtwarzania zmienia się w **pauzę** (Spacja robi to samo); kursor i oś czasu
+podążają za nim, więc można zaznaczyć zakres klawiszami I i O podczas
+oglądania. Kliknięcie osi czasu lub przejście o klatkę zatrzymuje
+odtwarzanie.
 
 Panel *Timeline* pokazuje całe wideo jako taśmę filmową (oś czasu).
 **Ctrl+kółko** powiększa, **kółko** przewija; kliknięcie lub przeciąganie
@@ -111,28 +129,40 @@ przycisk **→ R** przenosi do niej kursor) i **fuzja rozpocznie się sama**:
 program przejdzie na stronę *Fuzja*. Narysowanie nowego obszaru w trakcie
 fuzji uruchamia ją od nowa. Przycisk **Wyczyść** usuwa obszar.
 
-**3. Wybór zakresu.** Przyciski **Początek [I]** i **Koniec [O]** (klawisze I
-i O) ustawiają pierwszą i ostatnią klatkę do użycia: te, na których obiekt
-jest widoczny i niezasłonięty. Znaczniki I i O można też przeciągać, a pola
-IN / OUT przyjmują czas (`1:23.456`) lub numer klatki (`f2000`). Przy
-każdym narysowaniu obszaru zakres zostaje ustawiony na 150 klatek przed
-klatką odniesienia i 150 po niej (w granicach wideo). Po zmianie
-zakresu przycisk **Scal klatki →** (lub F5) ponownie uruchamia fuzję.
-Najwyżej 301 klatek na jedną fuzję.
+**3. Wybór zakresu.** Przyciski **Początek [I]** i **Koniec [O]** (klawisze I i
+O) ustawiają pierwszą i ostatnią klatkę do użycia: te, na których obiekt jest
+widoczny i niezasłonięty. Znaczniki I i O można też przeciągać, a pola IN / OUT
+przyjmują czas (`1:23.456`) lub numer klatki (`f2000`). Przy każdym narysowaniu
+obszaru zakres zostaje ustawiony na 30 sekund przed klatką odniesienia i 30 po
+niej (w granicach wideo): to tylko granice wyszukiwania. Fuzja śledzi obiekt od
+klatki odniesienia na zewnątrz i w każdym kierunku zatrzymuje się po sekundzie
+bez obiektu; następnie znaczniki I i O zawężają się do klatek, w których był
+śledzony (raport to odnotowuje). Zakres przesunięty ręcznie pozostaje bez zmian.
+Po zmianie zakresu przycisk **Scal klatki →** (lub F5) ponownie uruchamia fuzję.
+Najwyżej 3601 klatek w zakresie.
 
 ## 5. Strona Fuzja
 
 ![Strona Fuzja: nałożenie i wynik](images/pl/03_fusion_ghost.png)
 
-**Porównanie.** Po lewej **Nałożenie klatek**: wszystkie użyte klatki nałożone
-na siebie, każda w miejscu, w którym została znaleziona, przed dopasowaniem.
-Widać, co trafia do fuzji i jak bardzo przemieszcza się obiekt. W menu nad
-lewym widokiem można zamiast tego wybrać **Klatka odniesienia**: klatkę
-odniesienia powiększoną interpolacją bikubiczną, czyli rzetelny obraz „przed”.
-Po prawej wynik: **Końcowy** albo **Tylko fuzja** (przed redukcją szumu
-i dekonwolucją). Oba widoki powiększają się i przesuwają razem.
+**Porównanie.** Po lewej **Nałożenie klatek**: wszystkie użyte klatki
+nałożone na siebie, każda w miejscu, w którym została znaleziona, przed
+dopasowaniem. Widać, co trafia do fuzji i jak bardzo przemieszcza się
+obiekt. W menu nad lewym widokiem można zamiast tego wybrać **Klatka
+odniesienia**: klatkę odniesienia powiększoną interpolacją bikubiczną, czyli
+rzetelny obraz „przed”. Po prawej wynik: **Końcowy** albo **Tylko fuzja**
+(przed redukcją szumu i dekonwolucją). Oba widoki powiększają się i
+przesuwają razem. Oprócz kółka przyciski pod widokami pomniejszają (**−**,
+także poniżej rozmiaru dopasowanego, aby zobaczyć wynik w małej skali),
+powiększają (**+**), pokazują w skali **1:1** lub **dopasowują** do widoku;
+z klawiatury **−**, **+** i **0**.
 
 ![Strona Fuzja: klatka odniesienia i wynik](images/pl/04_fusion_reference.png)
+
+Drugi obraz pokazuje twarz, z ustawieniem **Face 05** i klatką odniesienia po
+lewej.
+
+**Znaki.** Gdy modele OCR są pobrane, po każdej fuzji *Tablicy* lub *Tekstu* wiersz **ZNAKI** w polu *Przetwarzanie* pokazuje odczytane znaki (**Odczytaj znaki** powtarza odczyt). Odczytywany jest wynik i osiem fuzji niezależnych grup klatek, a odczyty są głosowane znak po znaku. Modele rozpoznawania zawsze proponują najbardziej prawdopodobne znaki, nawet tam, gdzie nic nie da się odczytać: wiersz jest pokazywany dopiero od pewności modelu 60 %, w przeciwnym razie program pisze **nieczytelne**, a znak, który nie zbierze co najmniej 50 % ważonych głosów, pojawia się jako **«?»**. W przypadku tablicy **możliwy kraj** oszacowany przez model pojawia się na żółto obok znaków tylko wtedy, gdy odczyt jest czytelny, a jeden kraj ma większość głosów; w przeciwnym razie jest wśród szczegółów, ze swoim udziałem. Szczegóły podają też **zgodność** odczytów, **pewność modelu**, **wątpliwe** pozycje i znaki do **sprawdzenia okiem** (8/B, 0/D/O, 1/I, 5/S, 2/Z, 6/G). *Tekst* może mieć kilka wierszy, oddzielonych «|», głosowanych osobno. Na pierwszym obrazie tablica jest bardzo mała (znaki wysokie na około 12 pikseli w wideo) i jest odczytana jako 34LG4527, możliwy kraj Turkey. Odczyt i kraj to szacunki: zawsze porównuj z obrazem.
 
 **Przetwarzanie.** Siedem etapów z ich wynikiem i czasem; poniżej podsumowanie
 (użyte klatki, powiększenie, szum przed fuzją i po niej), pasek postępu oraz
@@ -146,6 +176,8 @@ etapów: *ponownie użyto*).
 
 Kolumna po lewej grupuje parametry według etapów.
 
+**Typ obiektu.** Menu obok *Zaznacz obszar*, w polu *Obiekt* strony *Obiekt*, określa, co jest poprawiane. **Tablica** i **Tekst**: płaski, sztywny obiekt, jeden model ruchu na klatkę; różnią się odczytem znaków (model do tablic albo model do napisów w jednym lub wielu wierszach, w wielu językach). **Twarz**: między klatkami głowa się obraca, a mimika się zmienia, więc po sztywnym dopasowaniu każda klatka otrzymuje lokalne niesztywne doprecyzowanie, które śledzi te ruchy w granicach kilku pikseli; części nadal różne liczą się mniej, klatki z inną pozą lub mimiką są pomijane, odtwarzanie jest lżejsze, a automatyczne poziomy łagodniejsze dla skóry i cieni. Zmiana typu wczytuje jego wartości domyślne i ponawia dopasowanie. Nic nie jest wymyślane: doprecyzowanie przesuwa tylko o kilka pikseli to, co zawierają klatki. Dla twarzy model ruchu jest domyślnie afiniczny, dopasowanie odrzuca deformacje, które nie są możliwym ruchem głowy, a poza elipsą wpisaną w obszar wynik pokazuje klatkę odniesienia, bo tło porusza się inaczej.
+
 **Zapisane ustawienia.** Nazwane zestawy parametrów: **Zapisz…** pyta o nazwę
 i zapisuje bieżące parametry; wybranie nazwy w menu wczytuje je; **Usuń**
 usuwa wybrany zestaw; **Domyślne** przywraca domyślne wartości wszystkich
@@ -153,8 +185,11 @@ parametrów. **Z raportu…** wczytuje parametry z pliku `report.json` wcześnie
 zapisanej fuzji, aby dokładnie ją powtórzyć. Parametry w użyciu są też
 zapamiętywane przy zamykaniu programu.
 
+**Wbudowane ustawienia.** Menu *Zapisane ustawienia* zawsze zaczyna się od pięciu ustawień dla typu obiektu wybranego na stronie Obiekt: **Plate 01** standard, **02** noc lub szum, **03** odległa mała tablica, **04** pojazd w ruchu z rozmyciem, **05** cień lub pod światło; **Text 01–05** te same pięć przypadków dla napisów; **Face 01** standard, **02** noc lub szum, **03** minimalne przetwarzanie, **04** odległa mała twarz, **05** cień lub pod światło. Wiersz pod menu opisuje wybrane; nie można ich zmienić ani usunąć, a po nich są twoje ustawienia.
+
 | Panel | Parametr | Działanie |
 | --- | --- | --- |
+| Strona Obiekt | Rodzaj obiektu | Tablica (domyślnie) lub Tekst dla płaskiego, sztywnego obiektu (różnią się odczytem znaków); Twarz dodaje lokalne niesztywne doprecyzowanie i lżejsze odtwarzanie. |
 | Klatki i dopasowanie | Model ruchu | Przesunięcie, Obrót + przesunięcie, Afiniczny, **Perspektywa (homografia)** — domyślny; śledzi obiekt, który się zbliża, oddala lub obraca. Jeśli na danej klatce model nie jest zbieżny, próbowany jest prostszy. |
 | | Wyszukiwanie obiektu: minimalna korelacja | Poniżej tej wartości obiekt uznaje się za nieznaleziony na danej klatce. |
 | | Minimalna jakość dopasowania (ECC) | Klatki dopasowane gorzej są pomijane (domyślnie 0.80). |
@@ -190,6 +225,10 @@ folder `fusion_f<odniesienie>_<data-godzina>`, który zawiera:
 
 ![Pierwsza strona raportu PDF](images/pl/05_report.png)
 
+Z odczytem znaków raport ma sekcję **Odczyt znaków (OCR)**: odczyt, zgodność, pewność modelu, dla tablicy możliwy kraj i odczytany obszar, dla tekstu znalezione wiersze, metodę, głosowanie według pozycji z alternatywami i podobnymi znakami oraz każdy pojedynczy odczyt.
+
+![Odczyt znaków w raporcie PDF](images/pl/06_report_reading.png)
+
 Raport jest sporządzany w języku interfejsu. Zawiera źródło (ścieżka, rozmiar,
 suma kontrolna **SHA-256**, format), zakres, klatkę odniesienia i obszar,
 wszystkie parametry, siedem etapów z zastosowanymi metodami i czasami, tabelę
@@ -203,6 +242,7 @@ klatkę znajdującą się pod kursorem, w pełnej rozdzielczości i bezstratnie.
 
 ## 7. Jak uzyskać najlepszy wynik dla tablicy lub twarzy
 
+- **Twarz**: najpierw wybierz rodzaj obiektu *Twarz*; obejmij całą twarz z niewielkim marginesem, najlepiej na klatce, na której patrzy w kamerę, i ogranicz zakres do klatek o tej samej pozie. Raport podaje, ile klatek odrzucono z powodu innej pozy lub mimiki i jak szeroka jest twarz w wideo: poniżej około 60 pikseli spodziewaj się czystszego ogólnego wyglądu, nie cech identyfikujących.
 - **Klatka odniesienia**: klatka, na której obiekt jest największy i najostrzejszy.
 - **Zakres**: tylko klatki, na których obiekt jest w pełni widoczny. Klatki
   odległe od klatki odniesienia (znacznie mniejszy obiekt, inna perspektywa)
@@ -246,19 +286,33 @@ klatkę znajdującą się pod kursorem, w pełnej rozdzielczości i bezstratnie.
 | Ctrl+O | Otwórz wideo |
 | ← / → | Poprzednia / następna klatka |
 | Shift+← / Shift+→ | 10 klatek wstecz / naprzód |
+| Spacja | Odtwarzanie lub pauza podglądu |
 | Home / End | Pierwsza / ostatnia klatka |
 | I / O | Początek / koniec zakresu na kursorze |
 | + / − | Powiększenie / pomniejszenie osi czasu |
 | F | Całe wideo na osi czasu |
 | Przeciąganie prawym przyciskiem na podglądzie | Zaznaczenie obszaru obiektu (fuzja się rozpoczyna) |
 | Esc | Wyjście z trybu *Zaznacz obszar* |
+| − / + / 0 (strona Fuzja) | Pomniejsz / powiększ / dopasuj wynik |
+| F11 | Większy podgląd: ukrywa lub pokazuje oś czasu (strona Obiekt) |
 | F5 | Uruchomienie fuzji |
 | Ctrl+S | Zapis wyniku (strona Fuzja) lub klatki (strona Obiekt) |
 
 
-*Zrzuty ekranu: film „[Busy Highway Traffic at Sunset](https://www.pexels.com/video/busy-highway-traffic-at-sunset-31779728/)” autorstwa [Şeyhmus Kino](https://www.pexels.com/@seyhmuskino/), z serwisu Pexels, użyty zgodnie z [licencją Pexels](https://www.pexels.com/license/). Tablice rejestracyjne widoczne na zrzutach pochodzą z tego nagrania.*
+## 10. Modele OCR (opcjonalne)
+
+Odczyt znaków korzysta z dwóch modeli sieci neuronowych, uruchamianych przez OpenCV, które jest już częścią programu. **Nie są dołączone** do IdentiFrame i są **opcjonalne**: bez nich wszystko inne działa jak zwykle, pusty pozostaje tylko wiersz ZNAKI. Aby ich użyć, naciśnij **Pobierz / Aktualizuj** w polu **Modele OCR** strony *Konfiguracja*: trafiają do folderu `tools\ocr` obok programu (około 37 MB), a pole pokazuje, które są obecne.
+
+| Obiekt | Model | Licencja |
+| --- | --- | --- |
+| Tablica | [fast-plate-ocr](https://github.com/ankandrew/fast-plate-ocr) `cct-s-v2-global`, autor ankandrew: odczytuje całą tablicę i szacuje jej możliwy kraj spośród 65 | MIT, kod i wagi ([potwierdzone przez autora](https://github.com/ankandrew/fast-plate-ocr/issues/97)) |
+| Tekst | [PaddleOCR](https://github.com/PaddlePaddle/PaddleOCR) PP-OCRv6 small, Baidu / PaddleOCR, w konwersji ONNX [RapidOCR](https://github.com/RapidAI/RapidOCR): znajduje wiersze tekstu i odczytuje je w wielu językach | Apache 2.0 |
+
+Każdy plik jest sprawdzany odciskiem SHA-256, zanim zostanie zachowany; obok modeli zapisywane są teksty licencji i plik `SOURCE.txt` z pochodzeniem. Kraj jest szacunkiem na podstawie wyglądu tablicy, nie weryfikacją, i jest pokazywany z angielską nazwą.
+
+*Filmy testowe i zrzuty ekranu, z Pexels, użyte zgodnie z [licencją Pexels](https://www.pexels.com/license/): „[Busy Highway Traffic at Sunset](https://www.pexels.com/it-it/video/traffico-autostradale-intenso-al-tramonto-31779728/)” autorstwa [Şeyhmus Kino](https://www.pexels.com/@seyhmuskino/) (pojazdy i tablice), ruch uliczny w Tajpej na Tajwanie autorstwa [Levi Wedge](https://www.pexels.com/@levi-wedge-266970209/) ([film](https://www.pexels.com/it-it/video/citta-auto-traffico-veicoli-13271103/), napisy) i „[Charming European Street with Cyclist](https://www.pexels.com/it-it/video/affascinante-strada-europea-con-ciclista-33476096/)” autorstwa [Tuba Din](https://www.pexels.com/@tubadinn/) (twarz). Tablice, napisy i twarz widoczne na zrzutach pochodzą z tych nagrań.*
 
 ---
 
-FrameFusion jest wolnym oprogramowaniem na licencji GNU GPL v3 z wymogiem
+IdentiFrame jest wolnym oprogramowaniem na licencji GNU GPL v3 z wymogiem
 wskazania autora: zob. `LICENSE` i `NOTICE`. Andrea Cumini - andrea@osintinfo.net - www.osintinfo.net

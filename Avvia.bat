@@ -1,8 +1,8 @@
 @echo off
-rem Avvia FrameFusion senza finestra console.
+rem Avvia IdentiFrame senza finestra console.
 cd /d "%~dp0"
 if exist ".venv\Scripts\pythonw.exe" (
-    start "" ".venv\Scripts\pythonw.exe" "FrameFusion.py"
+    start "" ".venv\Scripts\pythonw.exe" "IdentiFrame.py"
 ) else (
-    start "" pythonw "FrameFusion.py"
+    start "" pythonw "IdentiFrame.py"
 )
